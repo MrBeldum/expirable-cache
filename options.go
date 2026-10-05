@@ -1,6 +1,9 @@
 package cache
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Option func type
 type Option func(lc *cacheImpl) error
@@ -15,8 +18,12 @@ func OnEvicted(fn func(key string, value interface{})) Option {
 
 // MaxKeys functional option defines how many keys to keep.
 // By default it is 0, which means unlimited.
+// A negative maximum is rejected; use 0 for unlimited.
 func MaxKeys(maximum int) Option {
 	return func(lc *cacheImpl) error {
+		if maximum < 0 {
+			return fmt.Errorf("max keys must be non-negative, got %d", maximum)
+		}
 		lc.maxKeys = maximum
 		return nil
 	}

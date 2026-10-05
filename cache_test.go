@@ -344,3 +344,10 @@ func ExampleCache() {
 	// value after expiration is found: false, value: <nil>
 	// Size: 1, Stats: {Hits:1 Misses:1 Added:2 Evicted:1} (50.0%)
 }
+
+func TestMaxKeysRejectsNegative(t *testing.T) {
+	_, err := NewCache(MaxKeys(-1))
+	if err == nil {
+		t.Fatal("expected error for MaxKeys(-1)")
+	}
+}
